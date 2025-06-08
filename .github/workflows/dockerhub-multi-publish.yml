@@ -1,4 +1,4 @@
-name: Build and Publish API & Frontend with Git SHA and Clean Tag
+name: Build and Publish API & Frontend
 
 on:
   push:
@@ -14,6 +14,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,21 +24,21 @@ jobs:
           SHA_SHORT=$(git rev-parse --short HEAD)
 
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            TAG_NAME="${GITHUB_REF##refs/tags/v}"
+            VERSION_TAG="${GITHUB_REF##refs/tags/v}"
           else
-            TAG_NAME=""
+            VERSION_TAG=""
           fi
 
           echo "sha_short=$SHA_SHORT" >> $GITHUB_OUTPUT
-          echo "version_tag=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "version_tag=$VERSION_TAG" >> $GITHUB_OUTPUT
 
-      - name: Docker login
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build & Push API Image
+      - name: Build and Push API (required tags)
         uses: docker/build-push-action@v5
         with:
           context: ./api
@@ -45,9 +46,16 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/api:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/api:${{ steps.vars.outputs.sha_short }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/api:${{ steps.vars.outputs.version_tag }}
 
-      - name: Build & Push Frontend Image
+      - name: Build and Push API (version tag)
+        if: steps.vars.outputs.version_tag != ''
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/api:${{ steps.vars.outputs.version_tag }}
+
+      - name: Build and Push Frontend (required tags)
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -55,4 +63,11 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ steps.vars.outputs.sha_short }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ steps.vars.outputs.version_tag }}
+
+      - name: Build and Push Frontend (version tag)
+        if: steps.vars.outputs.version_tag != ''
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ steps.vars.outputs.version_tag }}
