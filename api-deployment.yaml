@@ -34,7 +34,7 @@ spec:
               value: "3306"
             - name: MYSQL_USER
               value: root
-          image: zayatsvasiliyv/api:v4
+          image: zayatsvasiliyv/api:v1
           name: api
           ports:
             - containerPort: 5000
