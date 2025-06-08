@@ -2,7 +2,7 @@ name: Build and Publish API & Frontend with Git SHA and Branch/Tag tags
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     tags: ["v*"]
     paths:
       - 'api/**'
