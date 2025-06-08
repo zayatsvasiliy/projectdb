@@ -1,5 +1,6 @@
 name: Build and Publish API & Frontend with Git SHA and Branch/Tag tags
 
+
 on:
   push:
     branches: [master]
