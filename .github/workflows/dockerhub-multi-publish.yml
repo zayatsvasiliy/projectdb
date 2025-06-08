@@ -9,6 +9,7 @@ on:
       - 'frontend/**'
       - '.github/workflows/dockerhub-multi-publish.yml'
 
+
 jobs:
   build-and-push-api:
     runs-on: ubuntu-latest
