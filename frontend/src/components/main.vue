@@ -80,9 +80,9 @@ export default {
       :key="savedTime.id"
     >
  <div class="deleted-item">{{ savedTime.time }}</div>
-     <button class="btn-sm bg-red" @click="() => deleteTime(savedTime.id)">
+ <!--    <button class="btn-sm bg-red" @click="() => deleteTime(savedTime.id)">
         Удалить
-      </button>
+	--!> </button>
     </div>
   </div>
 </template>
