@@ -83,7 +83,7 @@ export default {
  <!--    <button class="btn-sm bg-red" @click="() => deleteTime(savedTime.id)">
         Удалить
 	 </button>
-	 --!></div>
+	 --></div>
   </div>
 </template>
 
