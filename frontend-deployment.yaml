@@ -23,7 +23,7 @@ spec:
         io.kompose.service: frontend
     spec:
       containers:
-        - image: zayatsvasiliyv/frontend:878f90f
+        - image: zayatsvasiliyv/frontend:0236ee5
           name: frontend
           ports:
             - containerPort: 3000
